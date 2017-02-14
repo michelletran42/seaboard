@@ -23,6 +23,7 @@ export default class {
       searchQuery: queryByHook('search-query', opts.el)
     }
 
+
     // Filter datasets and render in items container
     const paramFilters = pick(opts.params, ['organization', 'category'])
     const attributeFilters = pick(opts.el.data(), ['organization', 'category'])
@@ -37,19 +38,32 @@ export default class {
 
     // Search datasets listener
     const searchFunction = this._createSearchFunction(filteredDatasets)
+    const comp = this
+
+    if (opts.params.query) {
+        const query = opts.params.query
+        elements.searchQuery[0].setAttribute('value', query)
+        comp._executeSearch(query, searchFunction, elements)
+
+    }
+
     elements.searchQuery.on('keyup', (e) => {
-      const query = e.currentTarget.value
-
-      // Datasets
-      const results = searchFunction(query)
-      const resultsMarkup = results.map(TmplDatasetItem)
-      setContent(elements.datasetsItems, resultsMarkup)
-
-      // Dataset count
-      const resultsCountMarkup = results.length + ' datasets'
-      setContent(elements.datasetsCount, resultsCountMarkup)
+        const query = e.currentTarget.value
+        comp._executeSearch(query, searchFunction, elements)
     })
   }
+
+  _executeSearch(query, searchFunction, elements) {
+    // Datasets
+    const results = searchFunction(query)
+    const resultsMarkup = results.map(TmplDatasetItem)
+    setContent(elements.datasetsItems, resultsMarkup)
+
+    // Dataset count
+    const resultsCountMarkup = results.length + ' datasets'
+    setContent(elements.datasetsCount, resultsCountMarkup)
+  }
+
 
   // Returns a function that can be used to search an array of datasets
   // The function returns the filtered array of datasets
