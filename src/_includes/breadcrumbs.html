@@ -4,10 +4,18 @@
   {% else %}
     <li><a href="{{ site.baseurl }}/"><i class="fa fa-home" aria-label="Home"></i></a></li>
     {% if include.parent %}
-      {% assign parent = site.pages | where:"title",include.parent | first %}
-      {% if parent %}
-        <li><a href="{{ site.baseurl }}{{ parent.url }}">{{ parent.title }}</a></li>
-      {% endif %}
+      {% assign parents = parent | split: ',' %}
+      {% for p in parents %}
+        {% assign parent = site.departments | where:"title",p | first %}
+            {% if parent %}
+                <li><a href="{{ site.baseurl }}{{ parent.url }}">{{ parent.title }}</a></li>
+            {% endif %}
+            {% continue %}
+        {% assign parent = site.pages | where:"title",p | first %}
+            {% if parent %}
+                <li><a href="{{ site.baseurl }}{{ parent.url }}">{{ parent.title }}</a></li>
+            {% endif %}
+      {% endfor %}
     {% endif %}
     <li class="active">{{ page.title }}</li>
   {% endif %}

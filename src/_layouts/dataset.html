@@ -1,7 +1,8 @@
 ---
 layout: default
 ---
-{% include breadcrumbs.html parent="Datasets" %}
+{% capture parents %}Datasets,{{ page.department }}{% endcapture %}
+{% include breadcrumbs.html parent="Datasets,GIS" %}
 {% assign schema = page.schema | default: site.schema %}
 {% assign dataset_fields = site.data.schemas[schema].dataset_fields %}
 {% assign dataset_system_fields = "title|department|notes|license" | split: "|" %}
